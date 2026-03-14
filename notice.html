@@ -6,23 +6,23 @@
     <title>공지사항 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 헤더/메뉴 스타일 */
+        /* 1. 메뉴 우측 정렬 및 레이아웃 */
         header { border-bottom: 1px solid #eee; padding: 20px 0; }
         nav { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         nav ul { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
         nav ul li a { text-decoration: none; color: #333; font-weight: 500; }
         nav ul li a.active { color: #007bff; font-weight: bold; }
 
-        /* 게시판 스타일 */
+        /* 2. 게시판 디자인 */
         .notice-section { max-width: 900px; margin: 60px auto; padding: 0 20px; }
         .notice-table { width: 100%; border-collapse: collapse; border-top: 2px solid #333; }
-        .notice-table th { padding: 15px; background: #fcfcfc; border-bottom: 1px solid #ddd; font-weight: 600; text-align: center; }
-        .notice-row { cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s; }
+        .notice-table th { padding: 15px; background: #fcfcfc; border-bottom: 1px solid #ddd; }
+        .notice-row { cursor: pointer; border-bottom: 1px solid #eee; }
         .notice-row:hover { background-color: #f8f9fa; }
         .notice-row td { padding: 15px; text-align: center; color: #555; }
         .title-cell { text-align: left !important; color: #222 !important; font-weight: 500; }
 
-        /* 상세 내용 스타일 */
+        /* 3. 클릭하면 열리는 상세 내용 */
         .detail-content { display: none; background: #fafafa; border-bottom: 1px solid #eee; }
         .detail-box { padding: 25px 40px; line-height: 1.8; color: #666; white-space: pre-wrap; text-align: left; font-size: 0.95rem; }
     </style>
@@ -40,7 +40,7 @@
     </header>
 
     <section class="notice-section">
-        <h1 style="margin-bottom: 30px; letter-spacing: -1px;">Notice</h1>
+        <h1 style="margin-bottom: 30px;">Notice</h1>
         <table class="notice-table">
             <thead>
                 <tr>
@@ -63,22 +63,22 @@
                 const res = await fetch(sheetUrl);
                 const csvData = await res.text();
                 
-                // 줄바꿈 문자를 정리하여 배열로 만듭니다.
+                // 줄바꿈으로 나누고 빈 줄은 제거합니다.
                 const rows = csvData.trim().split(/\r?\n/); 
                 list.innerHTML = ""; 
 
                 rows.forEach((row, index) => {
-                    // 쉼표로 분리 (따옴표 내 쉼표 무시 정규식)
                     const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     
+                    // 데이터가 제대로 있는지 확인
                     if (columns.length >= 3) {
                         const num = columns[0].replace(/"/g, "").trim();
                         const title = columns[1].replace(/"/g, "").trim();
                         const date = columns[2].replace(/"/g, "").trim();
                         const content = columns[3] ? columns[3].replace(/"/g, "").trim() : "상세 내용이 없습니다.";
 
-                        // 항목명(No, 제목 등)이 데이터로 들어오는 것 방지
-                        if (num === "번호" || num === "No" || num === "No.") return;
+                        // 항목명(No, 제목 등)이 그대로 나오는 걸 방지
+                        if (num === "No" || num === "번호") return;
 
                         const tr = document.createElement('tr');
                         tr.className = 'notice-row';
@@ -100,7 +100,7 @@
                     }
                 });
             } catch (e) {
-                list.innerHTML = "<tr><td colspan='3' style='padding:50px; text-align:center;'>데이터 로딩 실패</td></tr>";
+                list.innerHTML = "<tr><td colspan='3' style='padding:50px; text-align:center;'>데이터를 불러오는 중입니다...</td></tr>";
             }
         }
         loadNotice();
