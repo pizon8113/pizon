@@ -1,72 +1,87 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><meta charset="UTF-8"><title>공지사항 | 파이존</title><link rel="stylesheet" href="style.css"></head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 - 파이존 주식회사</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <header><div class="container header-flex"><a href="index.html" class="logo">PIZON</a><nav><ul><li><a href="index.html">서비스</a></li><li><a href="portfolio.html">포트폴리오</a></li><li><a href="notice.html">공지사항</a></li><li><a href="contact.html">문의하기</a></li></ul></nav></div></header>
-    <section class="container">
-        <h2>Notice</h2>
-        <table style="width:100%; border-collapse:collapse;">
-            <thead style="background:#f4f4f4;"><tr><th style="padding:15px; border-bottom:2px solid #ddd;">제목</th><th style="width:20%;">날짜</th></tr></thead>
-            <tbody id="notice-list"><tr><td colspan="2" style="padding:20px; text-align:center;">공지사항을 불러오는 중입니다...</td></tr></tbody>
+    <header>
+        <nav>
+            <div class="logo">PIZON</div>
+            <ul>
+                <li><a href="index.html">서비스</a></li>
+                <li><a href="portfolio.html">포트폴리오</a></li>
+                <li><a href="notice.html" class="active">공지사항</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="notice-section">
+        <h1>Notice</h1>
+        <table class="notice-table">
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>날짜</th>
+                </tr>
+            </thead>
+            <tbody id="notice-list">
+                <tr><td colspan="2" style="text-align:center; padding:50px;">공지사항을 불러오는 중입니다...</td></tr>
+            </tbody>
         </table>
     </section>
+
+    <footer>
+        <p>&copy; 2026 Pizon Co., Ltd. 모든 권리 보유.</p>
+    </footer>
+
     <script>
-        const sheetUrl = "여기에_구글시트_CSV_주소_입력";
+        // 보내주신 구글 시트 주소를 적용했습니다.
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSpk-EmQqeMguX_yaOkABtQuZzxB-j9V4If0OnUUCWxixonAz_dWBsIcRcejNpp7al2q4vhApOfz96c/pub?output=csv";
+
         async function loadNotice() {
+            const list = document.getElementById('notice-list');
             try {
                 const res = await fetch(sheetUrl);
                 const data = await res.text();
-                const rows = data.split('\n').slice(1);
-                const list = document.getElementById('notice-list');
-                list.innerHTML = rows.map(row => {
-                    const [id, title, date] = row.split(',');
-                    return `<tr><td style="padding:15px; border-bottom:1px solid #eee;">${title}</td><td>${date}</td></tr>`;
-                }).join('');
-            } catch { document.getElementById('notice-list').innerHTML = "<tr><td colspan='2'>공지사항이 없습니다.</td></tr>"; }
+                
+                // 줄바꿈을 기준으로 데이터를 나누고 첫 줄(제목행)을 제거합니다.
+                const rows = data.split(/\r?\n/).slice(1); 
+                list.innerHTML = ""; 
+
+                rows.forEach(row => {
+                    // 쉼표로 칸을 나누되, 따옴표 안의 쉼표는 무시합니다.
+                    const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    
+                    if (columns.length >= 3) {
+                        // 대표님 시트 기준: columns[1] = 제목, columns[2] = 날짜
+                        const title = columns[1].replace(/"/g, "").trim();
+                        const date = columns[2].replace(/"/g, "").trim();
+                        
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="padding:15px; border-bottom:1px solid #eee; text-align:left;">${title}</td>
+                            <td style="padding:15px; border-bottom:1px solid #eee; text-align:center; color:#888; width:120px;">${date}</td>
+                        `;
+                        list.appendChild(tr);
+                    }
+                });
+
+                // 만약 공지사항이 하나도 없다면
+                if (list.innerHTML === "") {
+                    list.innerHTML = "<tr><td colspan='2' style='text-align:center; padding:20px;'>등록된 공지사항이 없습니다.</td></tr>";
+                }
+
+            } catch (error) {
+                console.error("데이터 로딩 실패:", error);
+                list.innerHTML = "<tr><td colspan='2' style='text-align:center; padding:20px; color:red;'>공지사항을 불러올 수 없습니다. 다시 시도해주세요.</td></tr>";
+            }
         }
+
+        // 페이지 로드 시 실행
         loadNotice();
     </script>
-    const sheetUrl =
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSpk-EmQqeMguX_yaOkABtQuZzxB-j9V4If0OnUUCWxixonAz_dWBsIcRcejNpp7al2q4vhApOfz96c/pub?output=csv";
-    async function loadNotice() {
-    try {
-        const res = await fetch(sheetUrl);
-        const data = await res.text();
-        
-        // 데이터를 줄 단위로 나누고 첫 줄(번호/제목/날짜)은 제외합니다.
-        const rows = data.split('\n').slice(1); 
-        const list = document.getElementById('notice-list');
-        
-        list.innerHTML = rows.map(row => {
-            // 콤마(,)로 칸을 나눕니다.
-            const columns = row.split(','); 
-            
-            // 데이터가 있는 줄만 처리합니다.
-            if (columns.length >= 3) {
-                // columns[1]은 B열(제목), columns[2]는 C열(날짜)입니다.
-                const title = columns[1].replace(/"/g, ""); 
-                const date = columns[2].replace(/"/g, "");
-                
-                return `
-                    <tr>
-                        <td style="padding:15px; border-bottom:1px solid #eee; text-align:left;">
-                            ${title}
-                        </td>
-                        <td style="padding:15px; border-bottom:1px solid #eee; text-align:center; color:#888; width:120px;">
-                            ${date}
-                        </td>
-                    </tr>
-                `;
-            }
-            return "";
-        }).join('');
-    } catch (error) {
-        console.error("공지사항 로딩 에러:", error);
-        document.getElementById('notice-list').innerHTML = "<tr><td colspan='2' style='padding:20px; text-align:center;'>공지사항을 불러오는 중 오류가 발생했습니다.</td></tr>";
-    }
-}
-loadNotice();
-</script>
-
 </body>
 </html>
