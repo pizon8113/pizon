@@ -6,26 +6,27 @@
     <title>공지사항 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 메뉴 위치 균형 조정 */
+        /* 메뉴 위치 및 디자인 고정 */
         nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; }
         nav ul { display: flex; gap: 30px; list-style: none; }
 
         .notice-section { max-width: 1000px; margin: 60px auto; padding: 0 20px; min-height: 500px; }
         .notice-table { width: 100%; border-collapse: collapse; margin-top: 30px; border-top: 2px solid #333; table-layout: fixed; }
-        .notice-table th, .notice-table td { padding: 18px 10px; border-bottom: 1px solid #eee; text-align: center; }
         
-        /* 제목 정중앙 정렬 및 스타일 */
-        .col-no { width: 70px; }
-        .col-title { width: auto; cursor: pointer; text-align: center !important; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        /* 모든 셀 텍스트를 정중앙으로 배치 */
+        .notice-table th, .notice-table td { padding: 18px 10px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; }
+        
+        .col-no { width: 60px; }
+        .col-date { width: 120px; color: #888; }
+        .col-title { cursor: pointer; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .col-title:hover { color: #007bff; text-decoration: underline; }
-        .col-date { width: 150px; color: #888; }
 
         /* 페이지네이션 */
         .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
         .pagination button { padding: 8px 15px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 4px; }
         .pagination button.active { background: #007bff; color: #fff; border-color: #007bff; font-weight: bold; }
 
-        /* 모달 스타일 */
+        /* 팝업 모달 */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
         .modal-content { background: #fff; margin: 12% auto; padding: 35px; width: 90%; max-width: 550px; border-radius: 15px; position: relative; text-align: left; }
         .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #aaa; }
@@ -50,7 +51,7 @@
             <thead>
                 <tr>
                     <th class="col-no">No.</th>
-                    <th class="col-title">제목</th>
+                    <th>제목</th>
                     <th class="col-date">날짜</th>
                 </tr>
             </thead>
@@ -72,29 +73,48 @@
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSpk-EmQqeMguX_yaOkABtQuZzxB-j9V4If0OnUUCWxixonAz_dWBsIcRcejNpp7al2q4vhApOfz96c/pub?gid=0&single=true&output=csv";
         let allNotices = [];
 
+        // 줄바꿈이 포함된 CSV를 완벽하게 분석하는 함수
+        function parseCSV(text) {
+            const result = [];
+            let row = [];
+            let col = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let nextChar = text[i+1];
+
+                if (char === '"' && inQuotes && nextChar === '"') { col += '"'; i++; }
+                else if (char === '"') { inQuotes = !inQuotes; }
+                else if (char === ',' && !inQuotes) { row.push(col.trim()); col = ""; }
+                else if ((char === '\r' || char === '\n') && !inQuotes) {
+                    if (col || row.length > 0) {
+                        row.push(col.trim());
+                        result.push(row);
+                        col = ""; row = [];
+                    }
+                    if (char === '\r' && nextChar === '\n') i++;
+                } 
+                else { col += char; }
+            }
+            if (col || row.length > 0) { row.push(col.trim()); result.push(row); }
+            return result;
+        }
+
         async function loadNotice() {
             try {
                 const res = await fetch(sheetUrl);
                 const csvData = await res.text();
+                const rows = parseCSV(csvData).slice(1); // 헤더 제외
                 
-                // 줄바꿈이 포함된 CSV를 정확하게 쪼개는 정규식 로직
-                const rows = [];
-                const pattern = /("([^"]|"")*"|[^,]+|(?=,)|(?=^|,)$)/g;
-                const lines = csvData.split(/\r?\n(?=(?:[^"]*"[^"]*")*[^"]*$)/); // 큰따옴표 밖의 줄바꿈만 인식
-                
-                for(let i=1; i<lines.length; i++) {
-                    const cols = lines[i].match(pattern).map(c => c.replace(/^"|"$/g, '').replace(/""/g, '"'));
-                    if(cols[1]) {
-                        rows.push({
-                            no: cols[0] || "",
-                            title: cols[1] || "",
-                            date: cols[2] || "",
-                            content: cols[3] || "내용이 없습니다."
-                        });
-                    }
-                }
+                allNotices = rows.map(cols => ({
+                    no: cols[0] || "",
+                    title: cols[1] || "",
+                    date: cols[2] || "",
+                    content: cols[3] || "내용이 없습니다."
+                })).filter(item => item.no);
 
-                allNotices = rows.sort((a, b) => parseInt(b.no) - parseInt(a.no));
+                allNotices.sort((a, b) => parseInt(b.no) - parseInt(a.no));
                 displayNotices(1);
             } catch (e) { console.error("데이터 로드 오류:", e); }
         }
@@ -109,7 +129,7 @@
                 <tr>
                     <td>${item.no}</td>
                     <td class="col-title" onclick="openModal('${item.title.replace(/'/g, "\\'")}', '${item.content.replace(/'/g, "\\'").replace(/\n/g, "\\n")}', '${item.date}')">${item.title}</td>
-                    <td class="col-date">${item.date}</td>
+                    <td>${item.date}</td>
                 </tr>
             `).join('');
             
