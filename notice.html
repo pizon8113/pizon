@@ -6,31 +6,29 @@
     <title>공지사항 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 메뉴 위치를 다른 페이지와 동일하게 최적화 */
-        nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+        /* 메뉴를 다른 페이지와 동일한 위치로 고정 */
+        nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; }
         nav ul { display: flex; gap: 30px; list-style: none; }
 
         .notice-section { max-width: 1000px; margin: 60px auto; padding: 0 20px; min-height: 500px; }
-        .notice-table { width: 100%; border-collapse: collapse; margin-top: 30px; table-layout: fixed; border-top: 2px solid #333; }
-        .notice-table th, .notice-table td { padding: 15px; border-bottom: 1px solid #eee; text-align: center; }
+        .notice-table { width: 100%; border-collapse: collapse; margin-top: 30px; border-top: 2px solid #333; }
+        .notice-table th, .notice-table td { padding: 18px 15px; border-bottom: 1px solid #eee; text-align: center; }
         
-        /* 칸 너비 최적화: 제목칸 부담 감소 */
-        .col-no { width: 80px; }
-        .col-title { width: auto; text-align: left !important; }
-        .col-date { width: 150px; color: #888; }
+        /* 제목 칸 가운데 정렬 및 강조 */
+        .col-title { cursor: pointer; transition: 0.2s; font-weight: 500; }
+        .col-title:hover { color: #007bff; text-decoration: underline; }
+        .col-date { color: #888; width: 150px; }
+        .col-no { width: 70px; }
 
-        .notice-table td.title { cursor: pointer; transition: 0.2s; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-        .notice-table td.title:hover { color: #007bff; font-weight: bold; }
-
-        /* 페이지네이션 버튼 디자인 */
+        /* 페이지네이션 버튼 */
         .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
-        .pagination button { padding: 8px 14px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 4px; }
+        .pagination button { padding: 8px 15px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 4px; }
         .pagination button.active { background: #007bff; color: #fff; border-color: #007bff; font-weight: bold; }
 
-        /* 팝업창(모달) */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
-        .modal-content { background: #fff; margin: 10% auto; padding: 40px; width: 90%; max-width: 600px; border-radius: 12px; position: relative; }
-        .close-btn { position: absolute; right: 25px; top: 20px; font-size: 30px; cursor: pointer; color: #aaa; }
+        /* 팝업(모달) 스타일 - 깔끔한 디자인 */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: #fff; margin: 12% auto; padding: 35px; width: 90%; max-width: 550px; border-radius: 15px; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #aaa; }
     </style>
 </head>
 <body>
@@ -47,17 +45,17 @@
     </header>
 
     <section class="notice-section">
-        <h1 style="border-left: 5px solid #007bff; padding-left: 15px; font-size: 2rem;">Notice</h1>
+        <h1 style="border-left: 5px solid #007bff; padding-left: 15px; margin-bottom: 10px;">Notice</h1>
         <table class="notice-table">
             <thead>
                 <tr>
                     <th class="col-no">No.</th>
-                    <th class="col-title">제목</th>
+                    <th>제목</th>
                     <th class="col-date">날짜</th>
                 </tr>
             </thead>
             <tbody id="notice-list">
-                <tr><td colspan="3">공지사항을 불러오는 중입니다...</td></tr>
+                <tr><td colspan="3">데이터를 불러오고 있습니다...</td></tr>
             </tbody>
         </table>
         <div id="pagination" class="pagination"></div>
@@ -66,9 +64,9 @@
     <div id="noticeModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div id="modal-date" style="color:#999; font-size:0.9rem; margin-bottom:10px;"></div>
-            <h2 id="modal-title" style="margin-bottom:20px; font-size:1.5rem; border-bottom:2px solid #f4f4f4; padding-bottom:15px;"></h2>
-            <div id="modal-body" style="line-height:1.8; color:#444; white-space:pre-wrap;"></div>
+            <div id="modal-date" style="color:#999; font-size:0.85rem; margin-bottom:8px;"></div>
+            <h2 id="modal-title" style="margin-bottom:20px; font-size:1.4rem; color:#222; border-bottom:1px solid #f0f0f0; padding-bottom:15px;"></h2>
+            <div id="modal-body" style="line-height:1.7; color:#444; white-space:pre-wrap; font-size:1rem;"></div>
         </div>
     </div>
 
@@ -76,13 +74,12 @@
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSpk-EmQqeMguX_yaOkABtQuZzxB-j9V4If0OnUUCWxixonAz_dWBsIcRcejNpp7al2q4vhApOfz96c/pub?gid=0&single=true&output=csv";
         let allNotices = [];
         const itemsPerPage = 10;
-        let currentPage = 1;
 
         async function loadNotice() {
             try {
                 const res = await fetch(sheetUrl);
                 const csvData = await res.text();
-                // 엑셀의 빈 줄이나 줄바꿈 문제 해결
+                // 정규식을 이용해 콤마가 포함된 텍스트도 정확히 분리
                 const rows = csvData.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
                 
                 allNotices = rows.map(row => {
@@ -93,36 +90,34 @@
                         date: cols[2]?.replace(/"/g, "").trim() || "",
                         content: cols[3]?.replace(/"/g, "").trim() || "상세 내용이 없습니다."
                     };
-                }).filter(item => item.title).reverse(); // 최신순
+                }).filter(item => item.title); // 제목이 있는 것만 표시
+
+                // 번호순(내림차순) 정렬 보장
+                allNotices.sort((a, b) => parseInt(b.no) - parseInt(a.no));
 
                 displayNotices(1);
             } catch (e) {
-                document.getElementById('notice-list').innerHTML = "<tr><td colspan='3'>공지사항을 불러올 수 없습니다.</td></tr>";
+                document.getElementById('notice-list').innerHTML = "<tr><td colspan='3'>데이터 로드 실패</td></tr>";
             }
         }
 
         function displayNotices(page) {
-            currentPage = page;
             const start = (page - 1) * itemsPerPage;
-            const pagedNotices = allNotices.slice(start, start + itemsPerPage);
+            const pagedData = allNotices.slice(start, start + itemsPerPage);
             const listEl = document.getElementById('notice-list');
             
-            if (pagedNotices.length === 0) {
-                listEl.innerHTML = "<tr><td colspan='3'>등록된 공지사항이 없습니다.</td></tr>";
-                return;
-            }
-
-            listEl.innerHTML = pagedNotices.map(item => `
+            listEl.innerHTML = pagedData.map(item => `
                 <tr>
                     <td>${item.no}</td>
-                    <td class="title" onclick="openModal('${item.title.replace(/'/g, "\\'")}', '${item.content.replace(/'/g, "\\'")}', '${item.date}')">${item.title}</td>
+                    <td class="col-title" onclick="openModal('${item.title.replace(/'/g, "\\'")}', '${item.content.replace(/'/g, "\\'")}', '${item.date}')">${item.title}</td>
                     <td class="col-date">${item.date}</td>
                 </tr>
             `).join('');
-            displayPagination();
+            
+            updatePagination(page);
         }
 
-        function displayPagination() {
+        function updatePagination(currentPage) {
             const totalPages = Math.ceil(allNotices.length / itemsPerPage);
             const paginationEl = document.getElementById('pagination');
             let html = "";
