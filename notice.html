@@ -26,5 +26,33 @@
         }
         loadNotice();
     </script>
+    const sheetUrl =
+    https://docs.google.com/spreadsheets/d/e/2PACX-1vSpk-EmQqeMguX_yaOkABtQuZzxB-j9V4If0OnUUCWxixonAz_dWBsIcRcejNpp7al2q4vhApOfz96c/pub?output=csv
+    async function loadNotice() {
+    try {
+        const res = await fetch(sheetUrl);
+        const data = await res.text();
+        
+        // 데이터를 한 줄씩 나누고 첫 번째 줄(제목)은 제외합니다.
+        const rows = data.split('\n').slice(1); 
+        const list = document.getElementById('notice-list');
+        
+        list.innerHTML = rows.map(row => {
+            // 콤마(,)로 칸을 나눕니다. [번호, 제목, 날짜] 순서입니다.
+            const columns = row.split(','); 
+            if (columns.length < 2) return ""; // 빈 줄 방지
+            
+            return `
+                <tr>
+                    <td style="padding:15px; border-bottom:1px solid #eee;">${columns[1]}</td>
+                    <td style="text-align:center; color:#888;">${columns[2]}</td>
+                </tr>
+            `;
+        }).join('');
+    } catch (error) {
+        document.getElementById('notice-list').innerHTML = "<tr><td colspan='2'>공지사항을 불러올 수 없습니다.</td></tr>";
+    }
+}
+loadNotice();
 </body>
 </html>
