@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta charset="UTF-8"><title>공지사항 | 파이존</title><link rel="stylesheet" href="style.css"></head>
+<body>
+    <header><div class="container header-flex"><a href="index.html" class="logo">PIZON</a><nav><ul><li><a href="index.html">서비스</a></li><li><a href="portfolio.html">포트폴리오</a></li><li><a href="notice.html">공지사항</a></li><li><a href="contact.html">문의하기</a></li></ul></nav></div></header>
+    <section class="container">
+        <h2>Notice</h2>
+        <table style="width:100%; border-collapse:collapse;">
+            <thead style="background:#f4f4f4;"><tr><th style="padding:15px; border-bottom:2px solid #ddd;">제목</th><th style="width:20%;">날짜</th></tr></thead>
+            <tbody id="notice-list"><tr><td colspan="2" style="padding:20px; text-align:center;">공지사항을 불러오는 중입니다...</td></tr></tbody>
+        </table>
+    </section>
+    <script>
+        const sheetUrl = "여기에_구글시트_CSV_주소_입력";
+        async function loadNotice() {
+            try {
+                const res = await fetch(sheetUrl);
+                const data = await res.text();
+                const rows = data.split('\n').slice(1);
+                const list = document.getElementById('notice-list');
+                list.innerHTML = rows.map(row => {
+                    const [id, title, date] = row.split(',');
+                    return `<tr><td style="padding:15px; border-bottom:1px solid #eee;">${title}</td><td>${date}</td></tr>`;
+                }).join('');
+            } catch { document.getElementById('notice-list').innerHTML = "<tr><td colspan='2'>공지사항이 없습니다.</td></tr>"; }
+        }
+        loadNotice();
+    </script>
+</body>
+</html>
