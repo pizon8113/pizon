@@ -6,7 +6,7 @@
     <title>공지사항 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 메뉴 우측 정렬 */
+        /* 헤더 및 메뉴 스타일 */
         header { border-bottom: 1px solid #eee; padding: 20px 0; }
         nav { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         nav ul { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
@@ -17,12 +17,13 @@
         .notice-section { max-width: 900px; margin: 60px auto; padding: 0 20px; }
         .notice-table { width: 100%; border-collapse: collapse; border-top: 2px solid #333; }
         .notice-table th { padding: 15px; background: #fcfcfc; border-bottom: 1px solid #ddd; font-weight: 600; }
+        
         .notice-row { cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s; }
         .notice-row:hover { background-color: #f8f9fa; }
         .notice-row td { padding: 15px; text-align: center; color: #555; }
         .title-cell { text-align: left !important; color: #222 !important; font-weight: 500; }
 
-        /* 아코디언 상세 내용 */
+        /* 아코디언 상세 내용 박스 */
         .detail-content { display: none; background: #fafafa; border-bottom: 1px solid #eee; }
         .detail-box { padding: 25px 40px; line-height: 1.8; color: #666; white-space: pre-wrap; text-align: left; font-size: 0.95rem; }
     </style>
@@ -35,7 +36,8 @@
                 <li><a href="index.html">서비스</a></li>
                 <li><a href="portfolio.html">포트폴리오</a></li>
                 <li><a href="notice.html" class="active">공지사항</a></li>
-                <li><a href="contact.html">문의하기</a></li> </ul>
+                <li><a href="contact.html">문의하기</a></li>
+            </ul>
         </nav>
     </header>
 
@@ -55,6 +57,7 @@
     </section>
 
     <script>
+        // 구글 시트 CSV 주소
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSpk-EmQqeMguX_yaOkABtQuZzxB-j9V4If0OnUUCWxixonAz_dWBsIcRcejNpp7al2q4vhApOfz96c/pub?output=csv";
 
         async function loadNotice() {
@@ -63,46 +66,71 @@
                 const res = await fetch(sheetUrl);
                 const csvData = await res.text();
                 
-                // 줄바꿈으로 행 나누기
-                const rows = csvData.trim().split(/\r?\n/); 
+                // 줄바꿈이 포함된 복잡한 CSV 데이터를 올바르게 파싱하는 로직
+                const pattern = /([^\r\n",]+|"(?:[^"]|"")*")?(?:,|\r?\n|$)/g;
+                let rowData = [];
+                let currentLine = [];
+                let match;
+                
+                while ((match = pattern.exec(csvData)) !== null) {
+                    let val = match[1] ? match[1] : "";
+                    // 따옴표 제거 및 내부 따옴표 복원
+                    if (val.startsWith('"') && val.endsWith('"')) {
+                        val = val.slice(1, -1).replace(/""/g, '"');
+                    }
+                    currentLine.push(val);
+                    
+                    // 행의 끝인지 확인
+                    if (match[0].endsWith('\n') || match[0] === "") {
+                        if (currentLine.some(cell => cell.trim() !== "")) {
+                            rowData.push(currentLine);
+                        }
+                        currentLine = [];
+                        if (match[0] === "") break;
+                    }
+                }
+
                 list.innerHTML = ""; 
 
-                rows.forEach((row, index) => {
-                    // CSV 파싱 (따옴표 처리 포함)
-                    const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                rowData.forEach((columns, index) => {
+                    if (columns.length < 2) return;
+
+                    const num = columns[0].trim();
+                    const title = columns[1].trim();
+                    const date = columns[2] ? columns[2].trim() : "";
+                    const content = columns[3] ? columns[3].trim() : "내용이 없습니다.";
+
+                    // 첫 번째 제목행(No, 제목 등)은 건너뜁니다
+                    if (num === "No" || num === "번호" || title === "제목") return;
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'notice-row';
+                    tr.innerHTML = `<td>${num}</td><td class="title-cell">${title}</td><td>${date}</td>`;
                     
-                    if (columns.length >= 3) {
-                        const num = columns[0].replace(/"/g, "").trim();
-                        const title = columns[1].replace(/"/g, "").trim();
-                        const date = columns[2].replace(/"/g, "").trim();
-                        const content = columns[3] ? columns[3].replace(/"/g, "").trim() : "상세 내용이 없습니다.";
+                    const detailTr = document.createElement('tr');
+                    detailTr.className = 'detail-content';
+                    detailTr.innerHTML = `<td colspan="3"><div class="detail-box">${content}</div></td>`;
 
-                        // 'No'나 '번호' 같은 제목행은 건너뛰고 데이터만 출력
-                        if (num === "No" || num === "번호") return;
+                    // 제목 행 클릭 시 상세 내용 토글
+                    tr.onclick = () => {
+                        const isVisible = detailTr.style.display === 'table-row';
+                        // 다른 열려있는 상세 내용은 모두 닫기
+                        document.querySelectorAll('.detail-content').forEach(el => el.style.display = 'none');
+                        // 현재 클릭한 것만 토글
+                        if (!isVisible) detailTr.style.display = 'table-row';
+                    };
 
-                        const tr = document.createElement('tr');
-                        tr.className = 'notice-row';
-                        tr.innerHTML = `<td>${num}</td><td class="title-cell">${title}</td><td>${date}</td>`;
-                        
-                        const detailTr = document.createElement('tr');
-                        detailTr.className = 'detail-content';
-                        detailTr.innerHTML = `<td colspan="3"><div class="detail-box">${content}</div></td>`;
-
-                        // 클릭 시 상세내용 토글
-                        tr.onclick = () => {
-                            const isVisible = detailTr.style.display === 'table-row';
-                            document.querySelectorAll('.detail-content').forEach(el => el.style.display = 'none');
-                            if (!isVisible) detailTr.style.display = 'table-row';
-                        };
-
-                        list.appendChild(tr);
-                        list.appendChild(detailTr);
-                    }
+                    list.appendChild(tr);
+                    list.appendChild(detailTr);
                 });
+
             } catch (e) {
-                list.innerHTML = "<tr><td colspan='3' style='padding:50px; text-align:center;'>공지사항을 불러오는 중입니다...</td></tr>";
+                console.error(e);
+                list.innerHTML = "<tr><td colspan='3' style='padding:50px; text-align:center;'>데이터를 불러오는 중 오류가 발생했습니다.</td></tr>";
             }
         }
+
+        // 페이지 로드 시 실행
         loadNotice();
     </script>
 </body>
