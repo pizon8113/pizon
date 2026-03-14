@@ -72,7 +72,7 @@
                 
                 // 1번 공지가 안 보인다면 .slice(1)을 .slice(0)으로 바꿔보세요. 
                 // 보통 첫 줄은 '번호, 제목' 같은 항목명이라 제외하는 게 맞습니다.
-                const rows = data.split(/\r?\n/).slice(0); 
+                const rows = data.split(/\r?\n/).slice(1); 
                 list.innerHTML = ""; 
 
                 rows.forEach((row, index) => {
