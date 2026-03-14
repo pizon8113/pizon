@@ -6,30 +6,23 @@
     <title>공지사항 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 1. 메뉴 우측 정렬 설정 */
+        /* 헤더/메뉴 스타일 */
         header { border-bottom: 1px solid #eee; padding: 20px 0; }
-        nav { 
-            display: flex; 
-            justify-content: space-between; /* 로고 왼쪽, 메뉴 오른쪽 */
-            align-items: center; 
-            max-width: 1100px; 
-            margin: 0 auto; 
-            padding: 0 20px; 
-        }
+        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         nav ul { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
         nav ul li a { text-decoration: none; color: #333; font-weight: 500; }
         nav ul li a.active { color: #007bff; font-weight: bold; }
 
-        /* 2. 게시판 스타일 */
+        /* 게시판 스타일 */
         .notice-section { max-width: 900px; margin: 60px auto; padding: 0 20px; }
         .notice-table { width: 100%; border-collapse: collapse; border-top: 2px solid #333; }
-        .notice-table th { padding: 15px; background: #fcfcfc; border-bottom: 1px solid #ddd; font-weight: 600; }
+        .notice-table th { padding: 15px; background: #fcfcfc; border-bottom: 1px solid #ddd; font-weight: 600; text-align: center; }
         .notice-row { cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s; }
         .notice-row:hover { background-color: #f8f9fa; }
         .notice-row td { padding: 15px; text-align: center; color: #555; }
         .title-cell { text-align: left !important; color: #222 !important; font-weight: 500; }
 
-        /* 3. 상세 내용(D열) 숨김 스타일 */
+        /* 상세 내용 스타일 */
         .detail-content { display: none; background: #fafafa; border-bottom: 1px solid #eee; }
         .detail-box { padding: 25px 40px; line-height: 1.8; color: #666; white-space: pre-wrap; text-align: left; font-size: 0.95rem; }
     </style>
@@ -68,32 +61,34 @@
             const list = document.getElementById('notice-list');
             try {
                 const res = await fetch(sheetUrl);
-                const data = await res.text();
+                const csvData = await res.text();
                 
-                // ✅ 1번 행부터 읽도록 .slice(0)으로 수정했습니다!
-                const rows = data.split(/\r?\n/).slice(0); 
+                // 줄바꿈 문자를 정리하여 배열로 만듭니다.
+                const rows = csvData.trim().split(/\r?\n/); 
                 list.innerHTML = ""; 
 
                 rows.forEach((row, index) => {
+                    // 쉼표로 분리 (따옴표 내 쉼표 무시 정규식)
                     const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    
                     if (columns.length >= 3) {
                         const num = columns[0].replace(/"/g, "").trim();
                         const title = columns[1].replace(/"/g, "").trim();
                         const date = columns[2].replace(/"/g, "").trim();
                         const content = columns[3] ? columns[3].replace(/"/g, "").trim() : "상세 내용이 없습니다.";
 
-                        // 제목 행 생성
+                        // 항목명(No, 제목 등)이 데이터로 들어오는 것 방지
+                        if (num === "번호" || num === "No" || num === "No.") return;
+
                         const tr = document.createElement('tr');
                         tr.className = 'notice-row';
                         tr.innerHTML = `<td>${num}</td><td class="title-cell">${title}</td><td>${date}</td>`;
                         
-                        // 상세 내용 행 생성
                         const detailTr = document.createElement('tr');
                         detailTr.className = 'detail-content';
                         detailTr.id = `detail-${index}`;
                         detailTr.innerHTML = `<td colspan="3"><div class="detail-box">${content}</div></td>`;
 
-                        // 클릭 시 상세내용 토글
                         tr.onclick = () => {
                             const isVisible = detailTr.style.display === 'table-row';
                             document.querySelectorAll('.detail-content').forEach(el => el.style.display = 'none');
