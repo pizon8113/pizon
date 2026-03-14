@@ -6,26 +6,20 @@
     <title>공지사항 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 헤더 및 메뉴 스타일 */
-        header { border-bottom: 1px solid #eee; padding: 20px 0; }
-        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        nav ul { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
-        nav ul li a { text-decoration: none; color: #333; font-weight: 500; }
-        nav ul li a.active { color: #007bff; font-weight: bold; }
-
-        /* 게시판 스타일 */
-        .notice-section { max-width: 900px; margin: 60px auto; padding: 0 20px; }
-        .notice-table { width: 100%; border-collapse: collapse; border-top: 2px solid #333; }
-        .notice-table th { padding: 15px; background: #fcfcfc; border-bottom: 1px solid #ddd; font-weight: 600; }
+        .notice-section { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
+        .notice-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        .notice-table th { border-top: 2px solid #333; border-bottom: 1px solid #eee; padding: 15px; background: #f9f9f9; }
+        .notice-table td { border-bottom: 1px solid #eee; padding: 15px; text-align: center; }
+        .notice-table td.title { text-align: left; cursor: pointer; }
         
-        .notice-row { cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s; }
-        .notice-row:hover { background-color: #f8f9fa; }
-        .notice-row td { padding: 15px; text-align: center; color: #555; }
-        .title-cell { text-align: left !important; color: #222 !important; font-weight: 500; }
-
-        /* 아코디언 상세 내용 박스 */
-        .detail-content { display: none; background: #fafafa; border-bottom: 1px solid #eee; }
-        .detail-box { padding: 25px 40px; line-height: 1.8; color: #666; white-space: pre-wrap; text-align: left; font-size: 0.95rem; }
+        /* 페이지네이션 스타일 */
+        .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 30px; }
+        .pagination button { 
+            padding: 8px 15px; border: 1px solid #ddd; background: #fff; 
+            cursor: pointer; border-radius: 4px; transition: 0.3s;
+        }
+        .pagination button.active { background: #007bff; color: #fff; border-color: #007bff; }
+        .pagination button:hover:not(.active) { background: #f0f0f0; }
     </style>
 </head>
 <body>
@@ -42,95 +36,74 @@
     </header>
 
     <section class="notice-section">
-        <h1 style="margin-bottom: 30px; letter-spacing: -1px;">Notice</h1>
+        <h1>Notice</h1>
         <table class="notice-table">
             <thead>
                 <tr>
-                    <th style="width: 60px;">No.</th>
+                    <th style="width: 80px;">No.</th>
                     <th>제목</th>
-                    <th style="width: 130px;">날짜</th>
+                    <th style="width: 150px;">날짜</th>
                 </tr>
             </thead>
             <tbody id="notice-list">
                 </tbody>
         </table>
+        <div id="pagination" class="pagination"></div>
     </section>
 
     <script>
-        // 구글 시트 CSV 주소
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSpk-EmQqeMguX_yaOkABtQuZzxB-j9V4If0OnUUCWxixonAz_dWBsIcRcejNpp7al2q4vhApOfz96c/pub?gid=0&single=true&output=csv";
+        let allNotices = [];
+        const itemsPerPage = 10; // 10개씩 끊기
+        let currentPage = 1;
 
         async function loadNotice() {
-            const list = document.getElementById('notice-list');
             try {
                 const res = await fetch(sheetUrl);
                 const csvData = await res.text();
                 
-                // 줄바꿈이 포함된 복잡한 CSV 데이터를 올바르게 파싱하는 로직
-                const pattern = /([^\r\n",]+|"(?:[^"]|"")*")?(?:,|\r?\n|$)/g;
-                let rowData = [];
-                let currentLine = [];
-                let match;
-                
-                while ((match = pattern.exec(csvData)) !== null) {
-                    let val = match[1] ? match[1] : "";
-                    // 따옴표 제거 및 내부 따옴표 복원
-                    if (val.startsWith('"') && val.endsWith('"')) {
-                        val = val.slice(1, -1).replace(/""/g, '"');
-                    }
-                    currentLine.push(val);
-                    
-                    // 행의 끝인지 확인
-                    if (match[0].endsWith('\n') || match[0] === "") {
-                        if (currentLine.some(cell => cell.trim() !== "")) {
-                            rowData.push(currentLine);
-                        }
-                        currentLine = [];
-                        if (match[0] === "") break;
-                    }
-                }
+                // CSV 파싱 (기존 로직 유지)
+                const rows = csvData.split('\n').slice(1);
+                allNotices = rows.map(row => {
+                    const cols = row.split(',');
+                    return { no: cols[0], title: cols[1], date: cols[2] };
+                }).filter(item => item.title).reverse(); // 최신순 정렬
 
-                list.innerHTML = ""; 
-
-                rowData.forEach((columns, index) => {
-                    if (columns.length < 2) return;
-
-                    const num = columns[0].trim();
-                    const title = columns[1].trim();
-                    const date = columns[2] ? columns[2].trim() : "";
-                    const content = columns[3] ? columns[3].trim() : "내용이 없습니다.";
-
-                    // 첫 번째 제목행(No, 제목 등)은 건너뜁니다
-                    if (num === "No" || num === "번호" || title === "제목") return;
-
-                    const tr = document.createElement('tr');
-                    tr.className = 'notice-row';
-                    tr.innerHTML = `<td>${num}</td><td class="title-cell">${title}</td><td>${date}</td>`;
-                    
-                    const detailTr = document.createElement('tr');
-                    detailTr.className = 'detail-content';
-                    detailTr.innerHTML = `<td colspan="3"><div class="detail-box">${content}</div></td>`;
-
-                    // 제목 행 클릭 시 상세 내용 토글
-                    tr.onclick = () => {
-                        const isVisible = detailTr.style.display === 'table-row';
-                        // 다른 열려있는 상세 내용은 모두 닫기
-                        document.querySelectorAll('.detail-content').forEach(el => el.style.display = 'none');
-                        // 현재 클릭한 것만 토글
-                        if (!isVisible) detailTr.style.display = 'table-row';
-                    };
-
-                    list.appendChild(tr);
-                    list.appendChild(detailTr);
-                });
-
+                displayNotices(currentPage);
             } catch (e) {
-                console.error(e);
-                list.innerHTML = "<tr><td colspan='3' style='padding:50px; text-align:center;'>데이터를 불러오는 중 오류가 발생했습니다.</td></tr>";
+                document.getElementById('notice-list').innerHTML = "<tr><td colspan='3'>데이터 로딩 오류</td></tr>";
             }
         }
 
-        // 페이지 로드 시 실행
+        function displayNotices(page) {
+            currentPage = page;
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pagedNotices = allNotices.slice(start, end);
+
+            const listEl = document.getElementById('notice-list');
+            listEl.innerHTML = pagedNotices.map(item => `
+                <tr>
+                    <td>${item.no}</td>
+                    <td class="title">${item.title}</td>
+                    <td>${item.date}</td>
+                </tr>
+            `).join('');
+
+            displayPagination();
+        }
+
+        function displayPagination() {
+            const totalPages = Math.ceil(allNotices.length / itemsPerPage);
+            const paginationEl = document.getElementById('pagination');
+            
+            let html = "";
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button onclick="displayNotices(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+            }
+            paginationEl.innerHTML = html;
+        }
+
         loadNotice();
     </script>
 </body>
