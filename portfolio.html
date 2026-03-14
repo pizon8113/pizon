@@ -6,114 +6,108 @@
     <title>포트폴리오 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 기본 스타일 유지 */
-        header { border-bottom: 1px solid #eee; padding: 20px 0; }
-        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        nav ul { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
-        nav ul li a { text-decoration: none; color: #333; font-weight: 500; }
-        nav ul li a.active { color: #007bff; font-weight: bold; }
-
-        .portfolio-section { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
-        .portfolio-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 30px; 
-            margin-top: 40px;
-        }
-
-        .portfolio-item { 
-            background: #fff; 
-            border: 1px solid #eee; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-        .portfolio-item:hover { 
-            transform: translateY(-10px); 
-            box-shadow: 0 12px 24px rgba(0,0,0,0.1); 
-        }
+        /* 기본 레이아웃 유지 */
+        .portfolio-section { max-width: 1200px; margin: 60px auto; padding: 0 40px; }
+        .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px; }
         
-        .pf-img { width: 100%; height: 220px; object-fit: cover; background: #f8f9fa; }
+        /* 카드 클릭 가능 스타일 */
+        .portfolio-item { cursor: pointer; transition: transform 0.3s; border: 1px solid #eee; border-radius: 10px; overflow: hidden; background: #fff; }
+        .portfolio-item:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .pf-img { width: 100%; height: 220px; object-fit: cover; }
         .pf-info { padding: 20px; }
-        .pf-info h3 { margin: 0 0 10px 0; font-size: 1.25rem; color: #222; }
-        .pf-info p { margin: 0; color: #666; font-size: 0.95rem; line-height: 1.6; }
-        .pf-category { 
-            display: inline-block; 
-            padding: 4px 10px; 
-            background: #e7f3ff; 
-            color: #007bff; 
-            border-radius: 4px; 
-            font-size: 0.75rem; 
-            font-weight: bold; 
-            margin-bottom: 10px; 
-        }
+
+        /* 모달 스타일 */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
+        .modal-content { background: #fff; margin: 8% auto; padding: 0; width: 90%; max-width: 700px; border-radius: 20px; overflow: hidden; position: relative; }
+        .modal-header img { width: 100%; height: 350px; object-fit: cover; }
+        .modal-body { padding: 40px; }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 30px; cursor: pointer; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 10; }
     </style>
 </head>
 <body>
     <header>
-        <nav>
+        <nav style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 20px 40px;">
             <div class="logo" style="font-weight: bold; font-size: 1.5rem; color: #007bff;">PIZON</div>
-            <ul>
-                <li><a href="index.html">서비스</a></li>
-                <li><a href="portfolio.html" class="active">포트폴리오</a></li>
-                <li><a href="notice.html">공지사항</a></li>
-                <li><a href="contact.html">문의하기</a></li>
+            <ul style="display: flex; gap: 30px; list-style: none;">
+                <li><a href="index.html" style="text-decoration: none; color: #333;">서비스</a></li>
+                <li><a href="portfolio.html" class="active" style="text-decoration: none; color: #007bff; font-weight: bold;">포트폴리오</a></li>
+                <li><a href="notice.html" style="text-decoration: none; color: #333;">공지사항</a></li>
+                <li><a href="contact.html" style="text-decoration: none; color: #333;">문의하기</a></li>
             </ul>
         </nav>
     </header>
 
     <section class="portfolio-section">
-        <h1 style="letter-spacing: -1px;">Our Portfolio</h1>
-        <p style="color:#888;">파이존이 만들어온 성공의 기록들입니다.</p>
-        
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Our Portfolio</h1>
+        <p style="color: #666;">파이존이 만들어온 성공의 기록들입니다.</p>
+
         <div class="portfolio-grid">
-            <div class="portfolio-item">
-                <img src="images/port01.png" class="pf-img" alt="인스타그램 광고 대행" onerror="this.src='https://via.placeholder.com/400x300?text=PIZON'">
+            <div class="portfolio-item" onclick="openPfModal('인스타그램 광고 대행', 'SNS 마케팅', '타겟 최적화와 정밀한 분석을 통해 브랜드 인지도를 높이고 매출 성장을 이끌어냅니다. 실제 집행 결과 전환율이 200% 상승했습니다.', 'images/port01.png')">
+                <img src="images/port01.png" class="pf-img" alt="광고 대행">
                 <div class="pf-info">
-                    <span class="pf-category">SNS 마케팅</span>
+                    <span class="pf-category" style="color: #007bff; font-size: 0.8rem;">SNS 마케팅</span>
                     <h3>인스타그램 광고 대행</h3>
-                    <p>타겟 최적화와 정밀한 분석을 통해 브랜드 인지도를 높이고 매출 성장을 이끌어냅니다.</p>
                 </div>
             </div>
 
-            
-            
-            <div class="portfolio-item">
-                <img src="images/port02.png" class="pf-img" alt="모바일 앱 개발">
+            <div class="portfolio-item" onclick="openPfModal('모바일 앱 개발', '앱 디자인', '새로운 모바일 앱을 개발합니다. 사용자 경험을 최우선으로 고려한 직관적인 UI/UX 설계가 특징입니다.', 'images/port02.png')">
+                <img src="images/port02.png" class="pf-img" alt="앱 개발">
                 <div class="pf-info">
-                    <span class="pf-category">앱 디자인</span>
+                    <span class="pf-category" style="color: #007bff; font-size: 0.8rem;">앱 디자인</span>
                     <h3>모바일 앱 개발</h3>
-                    <p>새로운 모바일 앱을 개발합니다. 함께 만들어 가는 프로젝트 입니다.</p>
                 </div>
             </div>
 
-            
-            
-            <div class="portfolio-item">
-                <img src="images/port03.png" class="pf-img" alt="모바일 게임 개발">
+            <div class="portfolio-item" onclick="openPfModal('모바일 게임 개발', '웹 디자인', '다양한 장르의 모바일 게임을 개발합니다. 몰입도 높은 그래픽과 안정적인 시스템을 구축합니다.', 'images/port03.png')">
+                <img src="images/port03.png" class="pf-img" alt="게임 개발">
                 <div class="pf-info">
-                    <span class="pf-category">앱 디자인</span>
+                    <span class="pf-category" style="color: #007bff; font-size: 0.8rem;">웹 디자인</span>
                     <h3>모바일 게임 개발</h3>
-                    <p>다양한 장르의 모바일 게임을개발합니다.</p>
                 </div>
             </div>
 
-            
-            <div class="portfolio-item">
+            <div class="portfolio-item" onclick="openPfModal('홈페이지 개발', '웹 디자인', '고객의 니즈를 반영한 맞춤형 웹사이트를 제공합니다. 반응형 웹 기술로 모바일과 PC 어디서든 최적화됩니다.', 'images/port04.png')">
                 <img src="images/port04.png" class="pf-img" alt="홈페이지 개발">
                 <div class="pf-info">
-                    <span class="pf-category">앱 디자인</span>
+                    <span class="pf-category" style="color: #007bff; font-size: 0.8rem;">웹 디자인</span>
                     <h3>홈페이지 개발</h3>
-                    <p>고객의 니즈를 반영한 맞춤형 웹사이트를 제공합니다.</p>
                 </div>
             </div>
-
-
-
-            
-
         </div>
     </section>
+
+    <div id="pfModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePfModal()">&times;</span>
+            <div class="modal-header">
+                <img id="modal-img" src="" alt="상세이미지">
+            </div>
+            <div class="modal-body">
+                <p id="modal-cate" style="color: #007bff; font-weight: bold; margin-bottom: 10px;"></p>
+                <h2 id="modal-title" style="margin-bottom: 20px;"></h2>
+                <div id="modal-desc" style="line-height: 1.8; color: #444;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openPfModal(title, cate, desc, img) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-cate').innerText = cate;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('modal-img').src = img;
+            document.getElementById('pfModal').style.display = "block";
+            document.body.style.overflow = "hidden"; // 배경 스크롤 방지
+        }
+
+        function closePfModal() {
+            document.getElementById('pfModal').style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        window.onclick = function(e) {
+            if (e.target == document.getElementById('pfModal')) closePfModal();
+        }
+    </script>
 </body>
 </html>
