@@ -6,18 +6,23 @@
     <title>공지사항 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* 메뉴 우측 정렬 */
         header { border-bottom: 1px solid #eee; padding: 20px 0; }
         nav { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         nav ul { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
         nav ul li a { text-decoration: none; color: #333; font-weight: 500; }
         nav ul li a.active { color: #007bff; font-weight: bold; }
+
+        /* 게시판 스타일 */
         .notice-section { max-width: 900px; margin: 60px auto; padding: 0 20px; }
         .notice-table { width: 100%; border-collapse: collapse; border-top: 2px solid #333; }
-        .notice-table th { padding: 15px; background: #fcfcfc; border-bottom: 1px solid #ddd; }
-        .notice-row { cursor: pointer; border-bottom: 1px solid #eee; }
+        .notice-table th { padding: 15px; background: #fcfcfc; border-bottom: 1px solid #ddd; font-weight: 600; }
+        .notice-row { cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s; }
         .notice-row:hover { background-color: #f8f9fa; }
         .notice-row td { padding: 15px; text-align: center; color: #555; }
         .title-cell { text-align: left !important; color: #222 !important; font-weight: 500; }
+
+        /* 아코디언 상세 내용 */
         .detail-content { display: none; background: #fafafa; border-bottom: 1px solid #eee; }
         .detail-box { padding: 25px 40px; line-height: 1.8; color: #666; white-space: pre-wrap; text-align: left; font-size: 0.95rem; }
     </style>
@@ -30,54 +35,73 @@
                 <li><a href="index.html">서비스</a></li>
                 <li><a href="portfolio.html">포트폴리오</a></li>
                 <li><a href="notice.html" class="active">공지사항</a></li>
-            </ul>
+                <li><a href="contact.html">문의하기</a></li> </ul>
         </nav>
     </header>
+
     <section class="notice-section">
-        <h1 style="margin-bottom: 30px;">Notice</h1>
+        <h1 style="margin-bottom: 30px; letter-spacing: -1px;">Notice</h1>
         <table class="notice-table">
             <thead>
-                <tr><th style="width: 60px;">No.</th><th>제목</th><th style="width: 130px;">날짜</th></tr>
+                <tr>
+                    <th style="width: 60px;">No.</th>
+                    <th>제목</th>
+                    <th style="width: 130px;">날짜</th>
+                </tr>
             </thead>
-            <tbody id="notice-list"></tbody>
+            <tbody id="notice-list">
+                </tbody>
         </table>
     </section>
+
     <script>
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSpk-EmQqeMguX_yaOkABtQuZzxB-j9V4If0OnUUCWxixonAz_dWBsIcRcejNpp7al2q4vhApOfz96c/pub?output=csv";
+
         async function loadNotice() {
             const list = document.getElementById('notice-list');
             try {
                 const res = await fetch(sheetUrl);
                 const csvData = await res.text();
-                // 1. 데이터의 모든 줄을 가져옵니다 (slice 안 함)
+                
+                // 줄바꿈으로 행 나누기
                 const rows = csvData.trim().split(/\r?\n/); 
                 list.innerHTML = ""; 
+
                 rows.forEach((row, index) => {
+                    // CSV 파싱 (따옴표 처리 포함)
                     const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    
                     if (columns.length >= 3) {
                         const num = columns[0].replace(/"/g, "").trim();
                         const title = columns[1].replace(/"/g, "").trim();
                         const date = columns[2].replace(/"/g, "").trim();
-                        const content = columns[3] ? columns[3].replace(/"/g, "").trim() : "내용이 없습니다.";
-                        // 항목명(No, 제목)이 적힌 줄은 건너뜁니다.
+                        const content = columns[3] ? columns[3].replace(/"/g, "").trim() : "상세 내용이 없습니다.";
+
+                        // 'No'나 '번호' 같은 제목행은 건너뛰고 데이터만 출력
                         if (num === "No" || num === "번호") return;
+
                         const tr = document.createElement('tr');
                         tr.className = 'notice-row';
                         tr.innerHTML = `<td>${num}</td><td class="title-cell">${title}</td><td>${date}</td>`;
-                        const dTr = document.createElement('tr');
-                        dTr.className = 'detail-content';
-                        dTr.id = `detail-${index}`;
-                        dTr.innerHTML = `<td colspan="3"><div class="detail-box">${content}</div></td>`;
+                        
+                        const detailTr = document.createElement('tr');
+                        detailTr.className = 'detail-content';
+                        detailTr.innerHTML = `<td colspan="3"><div class="detail-box">${content}</div></td>`;
+
+                        // 클릭 시 상세내용 토글
                         tr.onclick = () => {
-                            const isV = dTr.style.display === 'table-row';
+                            const isVisible = detailTr.style.display === 'table-row';
                             document.querySelectorAll('.detail-content').forEach(el => el.style.display = 'none');
-                            if (!isV) dTr.style.display = 'table-row';
+                            if (!isVisible) detailTr.style.display = 'table-row';
                         };
+
                         list.appendChild(tr);
-                        list.appendChild(dTr);
+                        list.appendChild(detailTr);
                     }
                 });
-            } catch (e) { list.innerHTML = "<tr><td colspan='3' style='text-align:center;'>로딩 실패</td></tr>"; }
+            } catch (e) {
+                list.innerHTML = "<tr><td colspan='3' style='padding:50px; text-align:center;'>공지사항을 불러오는 중입니다...</td></tr>";
+            }
         }
         loadNotice();
     </script>
