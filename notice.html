@@ -33,30 +33,39 @@
         const res = await fetch(sheetUrl);
         const data = await res.text();
         
-        // 데이터를 한 줄씩 나누고 첫 번째 줄(제목)은 제외합니다.
+        // 데이터를 줄 단위로 나누고 첫 줄(번호/제목/날짜)은 제외합니다.
         const rows = data.split('\n').slice(1); 
         const list = document.getElementById('notice-list');
         
         list.innerHTML = rows.map(row => {
-    // 콤마(,)로 칸을 나눕니다.
-    const columns = row.split(','); 
-    
-    // 데이터가 부족한 줄은 건너뜁니다.
-    if (columns.length < 2) return ""; 
-    
-    return `
-        <tr>
-            <td style="padding:15px; border-bottom:1px solid #eee;">
-                ${columns[0].replace(/"/g, "")} </td>
-            <td style="text-align:center; color:#888;">
-                ${columns[1] ? columns[1].replace(/"/g, "") : ""} </td>
-        </tr>
-    `;
-}).join('');
+            // 콤마(,)로 칸을 나눕니다.
+            const columns = row.split(','); 
+            
+            // 데이터가 있는 줄만 처리합니다.
+            if (columns.length >= 3) {
+                // columns[1]은 B열(제목), columns[2]는 C열(날짜)입니다.
+                const title = columns[1].replace(/"/g, ""); 
+                const date = columns[2].replace(/"/g, "");
+                
+                return `
+                    <tr>
+                        <td style="padding:15px; border-bottom:1px solid #eee; text-align:left;">
+                            ${title}
+                        </td>
+                        <td style="padding:15px; border-bottom:1px solid #eee; text-align:center; color:#888; width:120px;">
+                            ${date}
+                        </td>
+                    </tr>
+                `;
+            }
+            return "";
+        }).join('');
     } catch (error) {
-        document.getElementById('notice-list').innerHTML = "<tr><td colspan='2'>공지사항을 불러올 수 없습니다.</td></tr>";
+        console.error("공지사항 로딩 에러:", error);
+        document.getElementById('notice-list').innerHTML = "<tr><td colspan='2' style='padding:20px; text-align:center;'>공지사항을 불러오는 중 오류가 발생했습니다.</td></tr>";
     }
 }
 loadNotice();
+
 </body>
 </html>
