@@ -50,25 +50,44 @@
         }
         .hero-section p { font-size: 1.4rem; opacity: 0.9; }
 
-                /* 서비스 아이콘 이미지 크기 확대 */
-        .service-icon img {
-            width: 120px !important; /* 기존보다 약 2배 확대 (원하는 크기로 조정 가능) */
-            height: auto;
-            margin-bottom: 25px; /* 이미지와 아래 글자 사이의 여백 확보 */
-            transition: transform 0.3s ease; /* 마우스를 올렸을 때 효과 추가 */
-        }
+        /* 서비스 섹션 가로 정렬 */
+.services-container {
+    display: flex; /* 가로로 나란히 배치 */
+    justify-content: center; /* 가운데로 모으기 */
+    gap: 30px; /* 항목 간 간격 */
+    max-width: 1100px;
+    margin: 50px auto;
+}
 
-        /* 아이콘에 마우스를 올렸을 때 살짝 커지는 효과 (시각적 재미 추가) */
-        .service-item:hover .service-icon img {
-            transform: scale(1.1);
-        }
+/* 개별 서비스 항목 */
+.service-item {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+}
 
-        /* 아이콘을 감싸는 전체 항목의 너비와 여백 조정 */
-        .service-item {
-            text-align: center;
-            width: 280px; /* 전체적인 너비를 넓혀 아이콘과 글자의 균형을 맞춤 */
-            margin: 0 15px;
-        }
+/* 이미지 크기를 현재 대비 70% 수준으로 조절 */
+.service-icon img {
+    width: 80px !important; /* 기존 120~150px에서 70% 수준인 80px로 고정 */
+    height: 80px !important;
+    object-fit: contain;
+    margin: 0 auto 20px auto;
+    display: block;
+    opacity: 0.9; /* 살짝 연하게 하여 텍스트를 더 돋보이게 함 */
+}
+
+/* 텍스트 스타일 */
+.service-item h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.service-item p {
+    font-size: 0.9rem;
+    color: #777;
+    line-height: 1.5;
+}
 
         
         /* 푸터 복구 */
