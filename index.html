@@ -50,46 +50,38 @@
         }
         .hero-section p { font-size: 1.4rem; opacity: 0.9; }
 
-        /* 서비스 섹션 가로 정렬 */
+       /* 1. 전체 항목을 가로로 나란히 배치 */
 .services-container {
-    display: flex; /* 가로로 나란히 배치 */
+    display: flex;          /* 가로 정렬의 핵심 */
     justify-content: center; /* 가운데로 모으기 */
-    gap: 30px; /* 항목 간 간격 */
-    max-width: 1100px;
-    margin: 50px auto;
+    gap: 20px;              /* 항목 간의 적당한 간격 */
+    max-width: 1000px;      /* 전체 너비 제한 */
+    margin: 40px auto;      /* 상하 여백 및 중앙 정렬 */
 }
 
-/* 개별 서비스 항목 */
+/* 2. 각 서비스 항목 설정 */
 .service-item {
-    flex: 1;
-    text-align: center;
-    padding: 20px;
+    flex: 1;                /* 3개가 동일한 너비를 가짐 */
+    text-align: center;     /* 글자와 이미지 모두 중앙 정렬 */
+    padding: 10px;
 }
 
-/* 이미지 크기를 현재 대비 70% 수준으로 조절 */
+/* 3. 아이콘 이미지를 현재의 50% 수준으로 축소 */
 .service-icon img {
-    width: 80px !important; /* 기존 120~150px에서 70% 수준인 80px로 고정 */
-    height: 80px !important;
-    object-fit: contain;
-    margin: 0 auto 20px auto;
+    width: 60px !important;  /* 기존 대비 약 50% 크기인 60px로 조정 */
+    height: 60px !important;
+    object-fit: contain;     /* 이미지 비율 유지 */
+    margin: 0 auto 15px auto; /* 이미지 중앙 정렬 및 아래 글자와의 간격 */
     display: block;
-    opacity: 0.9; /* 살짝 연하게 하여 텍스트를 더 돋보이게 함 */
 }
 
-/* 텍스트 스타일 */
+/* 4. 제목 글자 크기 조정 */
 .service-item h3 {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
     color: #333;
 }
-
-.service-item p {
-    font-size: 0.9rem;
-    color: #777;
-    line-height: 1.5;
-}
-
-        
+      
         /* 푸터 복구 */
         footer { background: #333; color: #ccc; padding: 40px 0; margin-top: 60px; }
         .footer-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0 40px; }
