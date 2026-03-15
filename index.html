@@ -50,36 +50,37 @@
         }
         .hero-section p { font-size: 1.4rem; opacity: 0.9; }
 
-       /* 1. 전체 항목을 가로로 나란히 배치 */
+      /* 1. 서비스 컨테이너: 무조건 가로 정렬 */
 .services-container {
-    display: flex;          /* 가로 정렬의 핵심 */
-    justify-content: center; /* 가운데로 모으기 */
-    gap: 20px;              /* 항목 간의 적당한 간격 */
-    max-width: 1000px;      /* 전체 너비 제한 */
-    margin: 40px auto;      /* 상하 여백 및 중앙 정렬 */
+    display: flex !important;    /* !important를 붙여 가로 배치를 강제합니다 */
+    flex-direction: row !important; 
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 15px !important;       /* 항목 간 간격 좁힘 */
+    max-width: 900px !important;
+    margin: 30px auto !important;
 }
 
-/* 2. 각 서비스 항목 설정 */
+/* 2. 각 서비스 항목: 가로 너비 제한 */
 .service-item {
-    flex: 1;                /* 3개가 동일한 너비를 가짐 */
-    text-align: center;     /* 글자와 이미지 모두 중앙 정렬 */
-    padding: 10px;
+    flex: 1 !important;
+    max-width: 250px !important;
+    text-align: center !important;
 }
 
-/* 3. 아이콘 이미지를 현재의 50% 수준으로 축소 */
+/* 3. 아이콘 이미지: 현재에서 50% 수준으로 축소 (약 45~50px) */
 .service-icon img {
-    width: 60px !important;  /* 기존 대비 약 50% 크기인 60px로 조정 */
-    height: 60px !important;
-    object-fit: contain;     /* 이미지 비율 유지 */
-    margin: 0 auto 15px auto; /* 이미지 중앙 정렬 및 아래 글자와의 간격 */
-    display: block;
+    width: 50px !important;      /* 숫자를 더 낮추면 더 작아집니다 */
+    height: 50px !important;
+    object-fit: contain !important;
+    margin: 0 auto 10px auto !important;
+    display: block !important;
 }
 
-/* 4. 제목 글자 크기 조정 */
+/* 4. 제목 글자 크기도 아이콘에 맞춰 축소 */
 .service-item h3 {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-    color: #333;
+    font-size: 1rem !important;
+    white-space: nowrap !important; /* 글자 줄바꿈 방지 */
 }
       
         /* 푸터 복구 */
