@@ -34,16 +34,21 @@
 </head>
 <body>
    <header>
-    <nav>
-        <div class="logo" style="font-weight: bold; font-size: 1.5rem; color: #007bff;">PIZON</div>
-        <ul>
-            <li><a href="index.html">서비스</a></li>
-            <li><a href="portfolio.html">포트폴리오</a></li>
-            <li><a href="notice.html" class="active" style="color: #007bff; font-weight: bold;">공지사항</a></li>
-            <li><a href="contact.html">문의하기</a></li>
+    <div class="nav-container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;">
+        <a href="index.html" class="logo-link" style="display: flex; align-items: center; text-decoration: none;">
+            <img src="images/logo.png" alt="파이존 로고" style="height: 50px; width: auto;"> 
+            <span style="font-weight: bold; font-size: 1.5rem; color: #007bff; margin-left: 10px;">PIZON</span>
+        </a>
+        
+        <ul class="nav-menu" style="display: flex; gap: 30px; list-style: none; margin: 0; padding: 0;">
+            <li><a href="index.html" style="text-decoration: none; color: #333;">서비스</a></li>
+            <li><a href="portfolio.html" style="text-decoration: none; color: #333;">포트폴리오</a></li>
+            <li><a href="notice.html" style="text-decoration: none; color: #333;">공지사항</a></li>
+            <li><a href="contact.html" style="text-decoration: none; color: #333;">문의하기</a></li>
         </ul>
-    </nav>
+    </div>
 </header>
+
 
 <style>
      /* 49줄 시작: 메뉴 활성화 및 목록 간격 축소 스타일 */
