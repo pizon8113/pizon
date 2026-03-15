@@ -50,10 +50,25 @@
         }
         .hero-section p { font-size: 1.4rem; opacity: 0.9; }
 
-        /* 서비스 아이콘 (이전 요청대로 큰 사이즈 유지) */
-        .services-section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
-        .services-grid { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
-        .service-icon { width: 120px; height: 120px; object-fit: contain; margin-bottom: 25px; }
+                /* 서비스 아이콘 이미지 크기 30% 확대 */
+        .service-icon img {
+            width: 90px !important; /* 기존보다 약 30% 확대 (원하는 크기로 조정 가능) */
+            height: auto;
+            margin-bottom: 25px; /* 이미지와 아래 글자 사이의 여백 확보 */
+            transition: transform 0.3s ease; /* 마우스를 올렸을 때 효과 추가 */
+        }
+
+        /* 아이콘에 마우스를 올렸을 때 살짝 커지는 효과 (시각적 재미 추가) */
+        .service-item:hover .service-icon img {
+            transform: scale(1.1);
+        }
+
+        /* 아이콘을 감싸는 전체 항목의 너비와 여백 조정 */
+        .service-item {
+            text-align: center;
+            width: 250px; /* 전체적인 너비를 넓혀 아이콘과 글자의 균형을 맞춤 */
+            margin: 0 15px;
+        }
         
         /* 푸터 복구 */
         footer { background: #333; color: #ccc; padding: 40px 0; margin-top: 60px; }
