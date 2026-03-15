@@ -50,39 +50,11 @@
         }
         .hero-section p { font-size: 1.4rem; opacity: 0.9; }
 
-      /* 1. 서비스 컨테이너: 무조건 가로 정렬 */
-.services-container {
-    display: flex !important;    /* !important를 붙여 가로 배치를 강제합니다 */
-    flex-direction: row !important; 
-    justify-content: center !important;
-    align-items: flex-start !important;
-    gap: 15px !important;       /* 항목 간 간격 좁힘 */
-    max-width: 900px !important;
-    margin: 30px auto !important;
-}
-
-/* 2. 각 서비스 항목: 가로 너비 제한 */
-.service-item {
-    flex: 1 !important;
-    max-width: 250px !important;
-    text-align: center !important;
-}
-
-/* 3. 아이콘 이미지: 현재에서 50% 수준으로 축소 (약 45~50px) */
-.service-icon img {
-    width: 50px !important;      /* 숫자를 더 낮추면 더 작아집니다 */
-    height: 50px !important;
-    object-fit: contain !important;
-    margin: 0 auto 10px auto !important;
-    display: block !important;
-}
-
-/* 4. 제목 글자 크기도 아이콘에 맞춰 축소 */
-.service-item h3 {
-    font-size: 1rem !important;
-    white-space: nowrap !important; /* 글자 줄바꿈 방지 */
-}
-      
+        /* 서비스 아이콘 (이전 요청대로 큰 사이즈 유지) */
+        .services-section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .services-grid { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
+        .service-icon { width: 120px; height: 120px; object-fit: contain; margin-bottom: 25px; }
+        
         /* 푸터 복구 */
         footer { background: #333; color: #ccc; padding: 40px 0; margin-top: 60px; }
         .footer-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0 40px; }
@@ -115,33 +87,23 @@
 
     <section class="services-section">
         <h2>Our Services</h2>
-        <div class="services-container" style="display: flex !important; flex-direction: row !important; justify-content: center !important; gap: 40px !important; max-width: 1100px; margin: 50px auto; padding: 0 20px;">
-
-    <div class="service-item" style="flex: 1 !important; text-align: center !important;">
-        <div class="service-icon">
-            <img src="images/icon01.png" alt="SNS 마케팅" style="width: 60px !important; height: 60px !important; object-fit: contain !important; margin: 0 auto 20px auto !important; display: block !important;">
+        <div class="services-grid">
+            <div class="service-card">
+                <img src="images/icon_app.png" alt="앱 개발" class="service-icon">
+                <h3>앱 개발</h3>
+                <p>고퀄리티 모바일 앱 제작</p>
+            </div>
+            <div class="service-card">
+                <img src="images/icon_web.png" alt="웹 구축" class="service-icon">
+                <h3>웹 구축</h3>
+                <p>최적화된 반응형 웹사이트</p>
+            </div>
+            <div class="service-card">
+                <img src="images/icon_con.png" alt="컨설팅" class="service-icon">
+                <h3>컨설팅</h3>
+                <p>IT 아키텍처 및 전략 수립</p>
+            </div>
         </div>
-        <h3 style="font-size: 1.2rem; margin-bottom: 10px;">SNS 마케팅</h3>
-        <p style="font-size: 0.9rem; color: #666;">타겟 맞춤형 광고로 브랜드 가치를 높입니다.</p>
-    </div>
-
-    <div class="service-item" style="flex: 1 !important; text-align: center !important;">
-        <div class="service-icon">
-            <img src="images/icon02.png" alt="앱 개발" style="width: 60px !important; height: 60px !important; object-fit: contain !important; margin: 0 auto 20px auto !important; display: block !important;">
-        </div>
-        <h3 style="font-size: 1.2rem; margin-bottom: 10px;">모바일 앱 개발</h3>
-        <p style="font-size: 0.9rem; color: #666;">직관적인 UI/UX로 최고의 경험을 선사합니다.</p>
-    </div>
-
-    <div class="service-item" style="flex: 1 !important; text-align: center !important;">
-        <div class="service-icon">
-            <img src="images/icon03.png" alt="홈페이지 제작" style="width: 60px !important; height: 60px !important; object-fit: contain !important; margin: 0 auto 20px auto !important; display: block !important;">
-        </div>
-        <h3 style="font-size: 1.2rem; margin-bottom: 10px;">홈페이지 제작</h3>
-        <p style="font-size: 0.9rem; color: #666;">성공적인 비즈니스를 위한 맞춤형 웹사이트.</p>
-    </div>
-
-</div>
     </section>
 
     <footer>
