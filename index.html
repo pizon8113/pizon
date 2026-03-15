@@ -1,28 +1,99 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8"><title>파이존 주식회사 | 서비스</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파이존 주식회사 - 혁신적인 IT 솔루션</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 히어로 섹션: 배경 이미지 설정 */
+        .hero-section {
+            position: relative;
+            height: 500px;
+            /* 이미지 위에 어두운 막을 입혀 글자를 잘 보이게 합니다 */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/background.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-section h1 { font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .hero-section p { font-size: 1.2rem; opacity: 0.9; }
+
+        /* 서비스 섹션 스타일 */
+        .services-section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .services-grid { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
+        
+        .service-card {
+            background: #fff;
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            flex: 1;
+            transition: 0.3s;
+        }
+        .service-card:hover { transform: translateY(-10px); }
+
+        /* 아이콘 이미지 크기 조절 */
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+
+        .service-card h3 { margin-bottom: 15px; color: #333; }
+        .service-card p { color: #666; font-size: 0.95rem; line-height: 1.6; }
+    </style>
 </head>
 <body>
-    <header><div class="container header-flex"><a href="index.html" class="logo">PIZON</a>
-        <nav><ul><li><a href="index.html">서비스</a></li><li><a href="portfolio.html">포트폴리오</a></li><li><a href="notice.html">공지사항</a></li><li><a href="contact.html">문의하기</a></li></ul></nav>
-    </div></header>
-    <section class="hero" style="text-align:center; background:var(--light);">
+    <header>
+        <nav style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 20px 40px;">
+            <div class="logo" style="font-weight: bold; font-size: 1.5rem; color: #007bff;">PIZON</div>
+            <ul style="display: flex; gap: 30px; list-style: none;">
+                <li><a href="index.html" style="text-decoration: none; color: #007bff; font-weight: bold;">서비스</a></li>
+                <li><a href="portfolio.html" style="text-decoration: none; color: #333;">포트폴리오</a></li>
+                <li><a href="notice.html" style="text-decoration: none; color: #333;">공지사항</a></li>
+                <li><a href="contact.html" style="text-decoration: none; color: #333;">문의하기</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero-section">
         <h1>세상을 연결하는 혁신, 파이존 주식회사</h1>
-        <p>최적의 앱 개발 솔루션을 제공합니다.</p>
+        <p>최적의 앱 개발 솔루션을 제공하여 비즈니스의 가치를 높입니다.</p>
     </section>
-    <section id="services" class="container">
-        <h2>Our Services</h2>
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; text-align:center;">
-            <div><h3>앱 개발</h3><p>iOS/Android 플랫폼 지원</p></div>
-            <div><h3>웹 구축</h3><p>반응형 웹 디자인</p></div>
-            <div><h3>컨설팅</h3><p>IT 기술 아키텍처 설계</p></div>
+
+    <section class="services-section">
+        <h2 style="font-size: 2rem; margin-bottom: 10px;">Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <img src="images/icon_app.png" alt="앱 개발" class="service-icon">
+                <h3>앱 개발</h3>
+                <p>iOS와 Android 플랫폼을 아우르는 고품질 모바일 앱을 제작합니다.</p>
+            </div>
+
+            <div class="service-card">
+                <img src="images/icon_web.png" alt="웹 구축" class="service-icon">
+                <h3>웹 구축</h3>
+                <p>반응형 디자인으로 모든 기기에 최적화된 웹사이트를 구축합니다.</p>
+            </div>
+
+            <div class="service-card">
+                <img src="images/icon_con.png" alt="컨설팅" class="service-icon">
+                <h3>컨설팅</h3>
+                <p>전문적인 IT 기술 아키텍처 설계 및 비즈니스 고도화 전략을 제공합니다.</p>
+            </div>
         </div>
     </section>
-    <footer><div class="container footer-grid">
-        <div><h3>파이존 주식회사</h3><p>대표이사: [성함] | 사업자등록번호: [공란]</p><p>주소: [등기 주소]</p></div>
-        <div class="footer-right"><p>© 2026 Pizon Inc.</p><a href="privacy.html" style="color:#ccc;">개인정보처리방침</a></div>
-    </div></footer>
+
+    <footer style="background: #333; color: white; padding: 40px; text-align: center; margin-top: 60px;">
+        <p>© 2026 Pizon Inc. 모든 권리 보유.</p>
+    </footer>
 </body>
 </html>
