@@ -24,23 +24,24 @@
         .close-btn { position: absolute; right: 20px; top: 15px; font-size: 30px; cursor: pointer; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 10; }
     </style>
 </head>
-<body>
-    <header>
-    <div class="nav-container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;">
-        <a href="index.html" class="logo-link" style="display: flex; align-items: center; text-decoration: none;">
-            <img src="images/logo.png" alt="파이존 로고" style="height: 50px; width: auto;"> 
-            <span style="font-weight: bold; font-size: 1.5rem; color: #007bff; margin-left: 10px;">PIZON</span>
-        </a>
-        
-        <ul class="nav-menu" style="display: flex; gap: 30px; list-style: none; margin: 0; padding: 0;">
-            <li><a href="index.html" style="text-decoration: none; color: #333;">서비스</a></li>
-            <li><a href="portfolio.html" style="text-decoration: none; color: #333;">포트폴리오</a></li>
-            <li><a href="notice.html" style="text-decoration: none; color: #333;">공지사항</a></li>
-            <li><a href="contact.html" style="text-decoration: none; color: #333;">문의하기</a></li>
-        </ul>
-    </div>
-</header>
-
+<body style="margin:0; padding:0;">
+    
+    <header style="width: 100%; background: #fff; border-bottom: 1px solid #eee; display: block;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: 80px; flex-wrap: nowrap;">
+            
+            <a href="index.html" style="display: flex; align-items: center; text-decoration: none; flex-shrink: 0;">
+                <img src="images/logo.png" alt="파이존 로고" style="height: 50px; width: auto;"> 
+                <span style="font-weight: bold; font-size: 1.5rem; color: #007bff; margin-left: 10px; white-space: nowrap;">PIZON</span>
+            </a>
+            
+            <ul style="display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; flex-direction: row; flex-wrap: nowrap;">
+                <li><a href="index.html" style="text-decoration: none; color: #333; white-space: nowrap;">서비스</a></li>
+                <li><a href="portfolio.html" style="text-decoration: none; color: #007bff; font-weight: bold; white-space: nowrap;">포트폴리오</a></li>
+                <li><a href="notice.html" style="text-decoration: none; color: #333; white-space: nowrap;">공지사항</a></li>
+                <li><a href="contact.html" style="text-decoration: none; color: #333; white-space: nowrap;">문의하기</a></li>
+            </ul>
+        </div>
+    </header>
 
     <section class="portfolio-section">
         <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Our Portfolio</h1>
@@ -102,7 +103,7 @@
             document.getElementById('modal-desc').innerText = desc;
             document.getElementById('modal-img').src = img;
             document.getElementById('pfModal').style.display = "block";
-            document.body.style.overflow = "hidden"; // 배경 스크롤 방지
+            document.body.style.overflow = "hidden"; 
         }
 
         function closePfModal() {
