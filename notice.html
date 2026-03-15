@@ -46,11 +46,17 @@
 </header>
 
 <style>
-    /* CSS에서도 active 클래스 색상을 확실히 정의합니다 */
-    nav ul li a.active {
-        color: #007bff !important;
-        font-weight: bold;
-    }
+     /* 49줄 시작: 메뉴 활성화 및 목록 간격 축소 스타일 */
+        nav ul li a.active {
+            color: #007bff !important;
+            font-weight: bold;
+        }
+
+        /* 목록 간격을 좁게 조정 (시각적 편의성) */
+        .notice-table td {
+            padding: 10px 15px !important; /* 위아래 간격을 10px로 축소 */
+            font-size: 0.95rem;
+        }
     
     /* 기존 스타일 유지 */
     nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; }
