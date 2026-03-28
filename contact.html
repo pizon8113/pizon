@@ -3,22 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light">
     <title>문의하기 - 파이존 주식회사</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 네비게이션 스타일 */
-        header { border-bottom: 1px solid #eee; padding: 20px 0; }
-        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        nav ul { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
-        nav ul li a { text-decoration: none; color: #333; font-weight: 500; }
-        nav ul li a.active { color: #007bff; font-weight: bold; }
+        /* 1. 배경색 강제 지정 (가장 중요) */
+        html, body { 
+            background-color: #ffffff !important; 
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
 
+        /* 네비게이션 스타일 */
+        header { 
+            width: 100%; 
+            background: #ffffff !important; /* 헤더 배경도 흰색 확정 */
+            border-bottom: 1px solid #eee; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
+        
+        /* 모바일 대응을 위한 미디어 쿼리 추가 */
+        @media (max-width: 768px) {
+            .nav-menu { display: none !important; } /* 모바일에서 메뉴가 겹치면 숨김 처리 */
+            .contact-section { margin: 30px auto; }
+            .contact-form { padding: 20px; }
+        }
+
+        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; }
+        
         /* 문의하기 섹션 스타일 */
         .contact-section { max-width: 600px; margin: 60px auto; padding: 0 20px; text-align: center; }
         .contact-form { margin-top: 40px; text-align: left; background: #fff; border: 1px solid #eee; padding: 40px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; box-sizing: border-box; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; box-sizing: border-box; background-color: #fff; color: #000; }
         .form-group textarea { height: 150px; resize: vertical; }
         
         .submit-btn { width: 100%; padding: 15px; background: #007bff; color: #fff; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background 0.3s; }
@@ -29,14 +52,13 @@
 </head>
 <body>
     <header>
-        <header style="width: 100%; background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 1000;">
-        <div class="nav-container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;">
+        <div class="nav-container">
             <a href="index.html" style="display: flex; align-items: center; text-decoration: none;">
-                <img src="images/logo.png" alt="파이존 로고" style="height: 50px; width: auto;"> 
-                <span style="font-weight: bold; font-size: 1.5rem; color: #007bff; margin-left: 10px;">PIZON</span>
+                <img src="images/logo.png" alt="파이존 로고" style="height: 40px; width: auto;"> 
+                <span style="font-weight: bold; font-size: 1.3rem; color: #007bff; margin-left: 10px;">PIZON</span>
             </a>
             
-            <ul class="nav-menu" style="display: flex; gap: 30px; list-style: none; margin: 0; padding: 0;">
+            <ul class="nav-menu" style="display: flex; gap: 20px; list-style: none; margin: 0; padding: 0;">
                 <li><a href="index.html" style="text-decoration: none; color: #333;">서비스</a></li>
                 <li><a href="portfolio.html" style="text-decoration: none; color: #333;">포트폴리오</a></li>
                 <li><a href="notice.html" style="text-decoration: none; color: #333;">공지사항</a></li>
@@ -44,9 +66,6 @@
             </ul>
         </div>
     </header>
-
-
-
 
     <section class="contact-section">
         <h1 style="letter-spacing: -1px;">Contact Us</h1>
@@ -74,7 +93,7 @@
 
         <div class="info-box">
             <p>📧 이메일: pizon8113@gmail.com</p>
-            <p>📍 주소: 경기도 용인시 수지구 수지로 342번길 32, 5층 503,504호 제399호(풍덕천동,상경빌딩)</p>
+            <p>📍 주소: 경기도 용인시 수지구 수지로 342번길 32, 5층 503,504호, 제399호(풍덕천동, 상경빌딩)</p>
         </div>
     </section>
 </body>
